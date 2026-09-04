@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#0f172a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CapBioMed">
+<link id="pwa-manifest" rel="manifest">
+<title>Capacitación Biomédica — SEM</title>
+<style>
+:root{--bg:#0f172a;--card:#1e293b;--card2:#263248;--bd:#334155;--bds:#475569;
+--ok:#22c55e;--ok-bg:#052e16;--ok-bd:#166534;
+--warn:#f59e0b;--warn-bg:#451a03;--warn-bd:#92400e;
+--err:#ef4444;--err-bg:#450a0a;--err-bd:#991b1b;
+--p:#3b82f6;--tx:#f1f5f9;--mu:#94a3b8;--acc:#60a5fa}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
+background:var(--bg);color:var(--tx);font-size:15px;min-height:100vh}
+.w{max-width:500px;margin:0 auto;padding:16px}
+.card{background:var(--card);border:.5px solid var(--bd);border-radius:12px;padding:16px;margin-bottom:12px}
+.muted{color:var(--mu);font-size:13px;line-height:1.5}
+label{display:block;font-size:12px;color:var(--mu);margin-bottom:4px;margin-top:8px}
+input,select{width:100%;padding:10px 12px;border-radius:8px;border:.5px solid var(--bds);
+background:var(--card2);color:var(--tx);font-size:14px;margin-bottom:4px;outline:none;-webkit-appearance:none}
+input:focus,select:focus{border-color:var(--p)}
+.btn{display:block;width:100%;padding:12px;border-radius:8px;border:none;font-size:14px;
+font-weight:500;cursor:pointer;margin-bottom:8px;text-align:center;transition:opacity .15s}
+.btn:active{opacity:.8}
+.btn-p{background:var(--p);color:#fff}
+.btn-g{background:transparent;border:.5px solid var(--bds);color:var(--mu);font-size:12px}
+.back{background:none;border:none;color:var(--mu);cursor:pointer;font-size:13px;margin-bottom:12px;padding:0}
+.prog{background:var(--bd);border-radius:3px;height:4px}
+.pf{height:4px;border-radius:3px;transition:width .3s}
+.srow{display:flex;gap:12px;align-items:flex-start;margin-bottom:12px}
+.sn{width:26px;height:26px;min-width:26px;border-radius:50%;display:flex;align-items:center;
+justify-content:center;font-size:12px;font-weight:600;color:#fff;flex-shrink:0;margin-top:1px}
+.st{font-size:14px;line-height:1.55}
+.sd{font-size:12px;color:var(--mu);margin-top:3px;line-height:1.45}
+.tip{border-radius:8px;padding:10px 12px;margin-top:10px;font-size:13px;line-height:1.55;border-width:1px;border-style:solid}
+.tw{background:var(--warn-bg);border-color:var(--warn-bd);color:var(--warn)}
+.ts{background:var(--ok-bg);border-color:var(--ok-bd);color:var(--ok)}
+.td{background:var(--err-bg);border-color:var(--err-bd);color:var(--err)}
+.chk{display:flex;gap:10px;align-items:flex-start;border-radius:10px;padding:10px 12px;
+margin-bottom:8px;cursor:pointer;border:.5px solid var(--bd);transition:all .15s}
+.chk.done{background:var(--ok-bg);border-color:var(--ok-bd)}
+.opt{background:var(--card2);border:1.5px solid var(--bd);border-radius:10px;padding:11px 14px;
+margin-bottom:8px;cursor:pointer;display:flex;gap:10px;align-items:center;font-size:14px;transition:all .2s}
+.opt.ok{background:var(--ok-bg);border-color:var(--ok-bd);color:var(--ok)}
+.opt.no{background:var(--err-bg);border-color:var(--err-bd);color:var(--err)}
+.ol{width:24px;height:24px;min-width:24px;border-radius:50%;border:1.5px solid currentColor;
+display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600}
+.eqli{display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:10px;
+margin-bottom:8px;background:var(--card);border:.5px solid var(--bd)}
+.sec-hdr{display:flex;align-items:center;gap:8px;padding:8px 0;margin-top:4px;margin-bottom:6px}
+.prow{display:flex;justify-content:space-between;align-items:center;padding:9px 12px;
+border-radius:8px;background:var(--card2);border:.5px solid var(--bd);margin-bottom:6px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px;margin-bottom:12px}
+.sc{background:var(--card);border:.5px solid var(--bd);border-radius:10px;padding:10px 6px;text-align:center}
+.wa{background:#25d366;color:#fff;display:flex;align-items:center;justify-content:center;
+gap:8px;width:100%;padding:12px;border-radius:10px;border:none;font-size:14px;font-weight:600;
+cursor:pointer;margin-top:4px;margin-bottom:8px}
+.user-row{padding:10px 12px;border-radius:8px;margin-bottom:6px;border:.5px solid var(--bd);background:var(--card2)}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600}
+.spin{display:inline-block;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div id="app">Cargando...</div>
+<script>
+// ══════════════════════════════════════════
+// ⚙️ CONFIGURACIÓN — pegá tu URL de Apps Script aquí
+// ══════════════════════════════════════════
+const BACKEND_URL = '';  // Ejemplo: 'https://script.google.com/macros/s/AKfyc.../exec'
+
+// ══════════════════════════════════════════
+// PWA
+// ══════════════════════════════════════════
+try{const m={name:"Capacitación Biomédica SEM",short_name:"CapBioMed",start_url:"./",
+display:"standalone",theme_color:"#0f172a",background_color:"#0f172a"};
+document.getElementById('pwa-manifest').href=
+URL.createObjectURL(new Blob([JSON.stringify(m)],{type:'application/manifest+json'}));}catch(e){}
+
+// ══════════════════════════════════════════
+// CONFIG
+// ══════════════════════════════════════════
+const PASS=8,APWD='SEM2026';
+
+// ══════════════════════════════════════════
+// SERVICES
+// ══════════════════════════════════════════
+const SVCS=[
+ {id:'cm',name:'Clínica Médica',icon:'🏥',eq:[
+  {id:'se3',name:'EDAN SE-3',type:'Electrocardiógrafo',icon:'📈',ok:true},
+  {id:'dfm100',name:'Philips Efficia DFM100',type:'Cardiodesfibrilador',icon:'⚡',ok:true},
+  {id:'fukuda',name:'Fukuda Cardiosunny',type:'Electrocardiógrafo',icon:'📊',ok:false},
+  {id:'v8',name:'EDAN LeEX V8',type:'Monitor multiparamétrico',icon:'🖥️',ok:false},
+  {id:'bistos',name:'Monitor Bistos',type:'Monitor multiparamétrico',icon:'📡',ok:false},
+  {id:'nellcor',name:'Nellcor Covidien',type:'Saturómetro',icon:'🩸',ok:false},
+ ]},
+ {id:'nc',name:'Neurocirugía',icon:'🧠',eq:[
+  {id:'se1',name:'EDAN LeEX SE-1',type:'Electrocardiógrafo',icon:'📈',ok:false},
+  {id:'c12',name:'Cardio E y M C12',type:'Electrocardiógrafo',icon:'📊',ok:false},
+ ]},
+];
+
+// ══════════════════════════════════════════
+// SE-3 DATA
+// ══════════════════════════════════════════
+const MODS_SE3=[
+ {id:0,icon:'🔬',title:'El equipo',desc:'Reconocé el EDAN SE-3',color:'#1565c0',slides:[
+  {type:'device',title:'Partes del equipo',sub:'Tocá cada zona del diagrama'},
+  {type:'keys',title:'Panel de teclas',sub:'Tocá cada tecla para ver qué hace'},
+  {type:'cards',title:'Conexiones',sub:'',items:[
+   {ic:'🔌',t:'Red eléctrica',d:'Cable al socket lateral izquierdo. Switch de red en el mismo panel. Selector de tensión en panel inferior: verificar 220V.'},
+   {ic:'🔗',t:'Cable de paciente',d:'Socket en el lado derecho. Asegurar con los 2 tornillos. Sin ellos puede aflojarse y generar artefactos.'},
+   {ic:'💾',t:'Puerto USB',d:'Socket derecho. Pendrive FAT32. Para guardar registros o exportar a PC.'},
+   {ic:'🔋',t:'Batería de litio',d:'Batería interna recargable. Si estuvo 2+ meses sin usarse, recargar antes. Solo técnicos autorizados la reemplazan.'},
+  ]},
+ ]},
+ {id:1,icon:'⚙️',title:'Configuración',desc:'Aviso de Ingeniería Clínica y datos del paciente',color:'#455a64',slides:[
+  {type:'notice',title:'Aviso — Ingeniería Clínica',sub:'',
+   msg:'El equipo fue configurado por Ingeniería Clínica y está listo para tomar el ECG.',
+   params:[{l:'Modo',v:'AUTO'},{l:'Velocidad',v:'25 mm/s'},{l:'Ganancia',v:'10 mm/mV'},{l:'Formato',v:'3 canales (3Ch/3Ch)'},{l:'Filtros',v:'Configurados según normativa'}],
+   warn:'Si necesitás cambiar algún parámetro, avisá a Ingeniería Clínica antes de realizarlo.'},
+  {type:'steps',title:'Datos del paciente (recomendado)',sub:'Es opcional — el equipo no bloquea sin ellos',color:'#1565c0',items:[
+   {t:'Presionar MENU en la pantalla principal',d:''},
+   {t:'Seleccionar "Patient Info" → presionar MENU',d:''},
+   {t:'Ingresar: Nombre, Edad, Sexo',d:'Usar ↑↓ para campos, ←→ para modificar valores'},
+   {t:'Opcionales: Altura, Peso, Presión arterial',d:''},
+   {t:'Presionar Return para volver',d:'Los datos aparecerán en el reporte impreso'},
+  ],tip:{tp:'tw',tx:'Sin datos, el ECG se imprime sin identificación. En emergencias se puede imprimir igualmente.'}},
+ ]},
+ {id:2,icon:'👤',title:'Preparar al paciente',desc:'Posición, piel y colocación de electrodos',color:'#2e7d32',slides:[
+  {type:'checklist',title:'Antes de conectar',sub:'Indicarle al paciente:',items:[
+   'Acostarse boca arriba (decúbito dorsal) en la camilla',
+   'Quedarse quieto durante todo el estudio — los movimientos generan artefactos',
+   'Respirar con normalidad, sin contener el aliento',
+   'No hablar mientras dura el registro',
+   'Retirar pulseras, reloj y objetos metálicos de muñecas y tobillos',
+  ]},
+  {type:'steps',title:'Preparación de la piel',sub:'Clave para un ECG de calidad',color:'#2e7d32',items:[
+   {t:'Rasurar si hay vello abundante en la zona',d:'El vello impide el contacto eléctrico directo'},
+   {t:'Limpiar con gasa embebida en alcohol al 75%',d:'Elimina grasa y suciedad — reduce la resistencia eléctrica'},
+   {t:'Frotar suavemente para activar la circulación',d:''},
+   {t:'Secar bien antes de colocar el electrodo',d:'La humedad excesiva genera artefactos'},
+  ],tip:{tp:'tw',tx:'La preparación de la piel es la causa #1 de ECG con artefactos. No saltear este paso.'}},
+  {type:'leads_limb',title:'Electrodos de extremidades',sub:'Tocá cada electrodo para ver dónde va'},
+  {type:'leads_chest',title:'Electrodos precordiales V1-V6',sub:'Tocá cada electrodo para ver su ubicación'},
+ ]},
+ {id:3,icon:'📊',title:'Tomar el ECG',desc:'Verificar señal y registrar',color:'#b71c1c',slides:[
+  {type:'steps',title:'Conectar y verificar',sub:'Antes de imprimir',color:'#b71c1c',items:[
+   {t:'Conectar el cable del paciente al equipo',d:'Socket lateral derecho — asegurar con los 2 tornillos'},
+   {t:'Colocar electrodos de extremidades y precordiales',d:'Verificar colores europeos y posiciones anatómicas'},
+   {t:'Encender si no estaba encendido',d:'Con red: switch lateral, luego ON/OFF. Con batería: solo ON/OFF.'},
+   {t:'Verificar pantalla: NO debe aparecer "Lead Off"',d:'Si aparece: revisar qué electrodo está desprendido'},
+  ],tip:{tp:'td',tx:'Nunca imprimir con "Lead Off" en pantalla. El ECG no tendrá valor diagnóstico.'}},
+  {type:'steps',title:'Modo AUTO — tomar el ECG',sub:'Procedimiento completo',color:'#b71c1c',items:[
+   {t:'Verificar que el modo en pantalla sea AUTO',d:'Si no: presionar MODE/RST hasta llegar a AUTO'},
+   {t:'Pedir al paciente que esté quieto',d:''},
+   {t:'Presionar PRINT/STOP para iniciar',d:'El equipo analiza la señal y comienza a imprimir'},
+   {t:'Observar las ondas en pantalla antes de que termine',d:'Si hay ruido excesivo, detener con PRINT/STOP y revisar los electrodos'},
+   {t:'Esperar a que el equipo termine solo',d:'No mover al paciente ni los cables'},
+   {t:'Revisar el reporte al salir del papel',d:'Verificar ondas limpias en todas las derivaciones'},
+  ],tip:{tp:'ts',tx:'¿Necesitás copia? Presionar 1mV/COPY inmediatamente después de que termine la impresión.'}},
+  {type:'cards',title:'El reporte impreso',sub:'Qué contiene',items:[
+   {ic:'📋',t:'Encabezado',d:'Datos del paciente (si fueron cargados), fecha, hora, institución, FC.'},
+   {ic:'📉',t:'Trazado 12 derivaciones',d:'4 grupos de 3 derivaciones. Velocidad 25mm/s, ganancia 10mm/mV.'},
+   {ic:'🔢',t:'Mediciones automáticas',d:'Duración PR, QRS, QT, QTc. Eje eléctrico. Valores de referencia.'},
+   {ic:'⚕️',t:'Análisis automático',d:'Interpretación orientativa. Siempre debe ser revisada por el médico.'},
+  ]},
+ ]},
+ {id:4,icon:'🔧',title:'Después del ECG',desc:'Desconectar, papel, limpiar y apagar',color:'#6a1b9a',slides:[
+  {type:'steps',title:'Al terminar el estudio',sub:'En orden',color:'#6a1b9a',items:[
+   {t:'Informarle al paciente que terminó',d:''},
+   {t:'Retirar los electrodos con cuidado',d:'Sin tirar bruscamente'},
+   {t:'Limpiar los electrodos reutilizables',d:'Gasa húmeda, eliminar restos de gel. Guardar cable sin dobleces bruscos.'},
+   {t:'Verificar el nivel de papel',d:'Si queda poco, cambiar ahora'},
+  ]},
+  {type:'steps',title:'Cómo cambiar el papel',sub:'',color:'#4a148c',items:[
+   {t:'Tomar las pestañas laterales de la carcasa',d:''},
+   {t:'Tirar hacia ARRIBA con firmeza',d:'La tapa se libera hacia adelante'},
+   {t:'Retirar el rollo vacío e insertar el nuevo',d:'Lado térmico (suave/brillante) hacia ABAJO'},
+   {t:'Cerrar hasta escuchar el "clic"',d:''},
+  ],tip:{tp:'tw',tx:'El lado equivocado no imprime nada.'}},
+  {type:'steps',title:'Limpieza y apagado',sub:'',color:'#1b5e20',items:[
+   {t:'Apagar y desconectar ANTES de limpiar',d:''},
+   {t:'Paño suave apenas húmedo (etanol 75%)',d:'No rociar directamente'},
+   {t:'Con batería: ON/OFF para apagar',d:''},
+   {t:'Con red: primero ON/OFF, luego switch lateral',d:''},
+  ],tip:{tp:'td',tx:'PROHIBIDO: lavandina/cloro, sumergir el equipo.'}},
+ ]},
+];
+const QUIZ_SE3=[
+ {q:'¿Cuántas derivaciones registra simultáneamente el EDAN SE-3?',ops:['3','6','12','15'],ans:2},
+ {q:'¿Qué lámpara indica que opera con batería interna?',ops:['Verde','Roja','Amarilla','Azul'],ans:2},
+ {q:'¿Con qué se limpia la piel antes de los electrodos?',ops:['Agua con jabón','Alcohol al 75%','Solución salina','Gasas secas'],ans:1},
+ {q:'¿Qué tecla inicia la impresión en modo AUTO?',ops:['MENU','MODE/RST','SENS','PRINT/STOP'],ans:3},
+ {q:'¿Qué indica "Lead Off" en pantalla?',ops:['Papel terminado','Batería baja','Electrodo desconectado','Error interno'],ans:2},
+ {q:'Los datos del paciente en el SE-3 son...',ops:['Obligatorios — bloquea sin ellos','Recomendados — se puede imprimir sin ellos','Solo para internados','Los carga el equipo solo'],ans:1},
+ {q:'¿Dónde se coloca V1?',ops:['5° EIC línea medioclavicular','4° EIC borde esternal DERECHO del paciente','4° EIC borde esternal IZQUIERDO','Entre V2 y V4'],ans:1},
+ {q:'Si las ondas en pantalla tienen mucho ruido, ¿qué hacés?',ops:['Seguir esperando','Presionar PRINT/STOP y revisar electrodos','Apagar el equipo','Cambiar a modo MANU'],ans:1},
+ {q:'Ingeniería ya configuró el equipo. Si necesitás cambiar algo, ¿qué hacés?',ops:['Cambiarlo directamente','Avisar a Ingeniería primero','Preguntar a un compañero','Apagar y encender'],ans:1},
+ {q:'Apagado con red eléctrica — orden correcto:',ops:['Solo switch lateral','Solo ON/OFF','Primero ON/OFF, luego switch lateral','Desconectar el cable directamente'],ans:2},
+];
+
+// ══════════════════════════════════════════
+// DFM100 DATA
+// ══════════════════════════════════════════
+const MODS_DFM100=[
+ {id:0,icon:'⚡',title:'El equipo DFM100',desc:'Partes, controles e indicadores del Philips DFM100',color:'#b71c1c',slides:[
+  {type:'device_dfm',title:'Partes del Philips Efficia DFM100',sub:'Tocá cada zona del diagrama'},
+  {type:'cards',title:'Controles principales',sub:'',items:[
+   {ic:'🔘',t:'Therapy Knob',d:'Control principal. Girándola se ENCIENDE el equipo y se selecciona el modo: OFF, AED, MON (Monitor), o energía para desfibrilación (50J / 100J / 150J / 200J).'},
+   {ic:'🎯',t:'Smart Select Knob',d:'Perilla de navegación. Presionar para abrir el menú principal. Girar para navegar listas o ajustar valores numéricos.'},
+   {ic:'🔴',t:'Charge / Shock / Sync',d:'Los 3 botones del protocolo 1-2-3. CHARGE: carga. SHOCK (parpadea cuando cargado): descarga. SYNC: cardioversión sincronizada.'},
+   {ic:'📋',t:'Botones de función',d:'Lead Select: cambia derivación ECG. Patient Category: Adulto/Pediátrico. Alarms: silencia alarmas. Print: imprime tira ECG.'},
+  ]},
+  {type:'steps',title:'Indicador RFU (Ready For Use)',sub:'Verificar SIEMPRE al inicio del turno',color:'#b71c1c',items:[
+   {t:'Reloj de arena parpadeante (negro) → LISTO ✓',d:'El equipo está en condiciones de entregar terapia.'},
+   {t:'X roja parpadeante + pitido → ATENCIÓN',d:'Batería baja o ausente. Cargar o conectar CA inmediatamente.'},
+   {t:'X roja SÓLIDA + pitido → FALLA CRÍTICA',d:'El equipo no puede entregar terapia. Retirar de servicio y llamar a Ingeniería Clínica.'},
+  ],tip:{tp:'td',tx:'Un DFM100 con X roja sólida NO está apto para uso clínico. Reportar inmediatamente.'}},
+ ]},
+ {id:1,icon:'✅',title:'Verificación de turno',desc:'Checklist obligatorio al inicio de cada turno',color:'#1b5e20',slides:[
+  {type:'notice',title:'Shift Check — ¿Por qué es crítico?',sub:'',
+   msg:'Un desfibrilador debe estar listo para usar EN EL MOMENTO que se lo necesita.',
+   params:[{l:'Frecuencia',v:'Al inicio de cada turno'},{l:'Responsable',v:'Personal del turno entrante'},{l:'Tiempo estimado',v:'2-3 minutos'},{l:'Registro',v:'Documentar en planilla del servicio'}],
+   warn:'Saltear la verificación de turno puede costar una vida. Un desfibrilador con batería descargada o pads vencidos no sirve en una parada cardíaca.'},
+  {type:'checklist',title:'Lista de verificación de turno',sub:'Completar al inicio de cada turno',items:[
+   'Indicador RFU muestra reloj de arena parpadeante (equipo listo)',
+   'Batería con carga ≥80% (verificar ícono en pantalla al encender brevemente)',
+   'Cable de AC conectado y funcionando (lámpara AC verde encendida)',
+   'Parches multifunction (pads) dentro de fecha de vencimiento, envase íntegro',
+   'Cable de terapia conectado y sin daños visibles',
+   'Cable ECG de monitoreo sin daños en conectores ni conductores',
+   'Papel para la impresora disponible (rollo de 50mm)',
+   'El equipo se encuentra en el lugar asignado del servicio',
+  ]},
+ ]},
+ {id:2,icon:'🩹',title:'Conectar al paciente',desc:'Parches multifunction, ECG y preparación de piel',color:'#1565c0',slides:[
+  {type:'steps',title:'Parches multifunction (pads)',sub:'Para monitoreo Y terapia',color:'#1565c0',items:[
+   {t:'Verificar la fecha de vencimiento del envase',d:'Pads vencidos no garantizan conductividad. Desechar si están vencidos o el envase está dañado.'},
+   {t:'Conectar el cable de terapia al equipo',d:'Puerto verde en el lado derecho. Insertar hasta escuchar el clic.'},
+   {t:'Conectar el conector de los pads al extremo del cable',d:''},
+   {t:'Preparar la piel: rasurar si hay vello, secar bien',d:'Los pads deben adherirse a la piel seca y limpia.'},
+   {t:'Colocar pad STERNAL arriba-derecha del tórax',d:'Por debajo de la clavícula derecha, hacia el esternón'},
+   {t:'Colocar pad APEX abajo-izquierda del tórax',d:'Línea axilar media izquierda, 5°-6° espacio intercostal'},
+  ],tip:{tp:'td',tx:'¡NADIE debe tocar al paciente cuando el desfibrilador está cargado o durante la descarga!'}},
+  {type:'steps',title:'Cable ECG para monitoreo',sub:'Para monitoreo continuo sin terapia',color:'#37474f',items:[
+   {t:'Conectar el cable ECG al puerto blanco (izquierdo)',d:'Puerto blanco = ECG. Insertar firmemente.'},
+   {t:'Preparar la piel y colocar los electrodos',d:'Limpiar con alcohol 75%, secar, colocar electrodos.'},
+   {t:'Cable 3 derivaciones: RA (blanco/rojo), LA (negro/amarillo), LL (rojo/verde)',d:'Colocar bajo clavículas y abdomen inferior izquierdo.'},
+   {t:'Verificar que la pantalla muestre ondas ECG limpias en Lead II',d:'Lead II es la derivación predeterminada y generalmente la más clara.'},
+  ]},
+ ]},
+ {id:3,icon:'🔴',title:'Operación',desc:'Monitor, AED y desfibrilación manual 1-2-3',color:'#c62828',slides:[
+  {type:'steps',title:'Modo Monitor',sub:'Para monitoreo de ECG y parámetros vitales',color:'#37474f',items:[
+   {t:'Girar el Therapy Knob a la posición MON',d:'El equipo enciende en modo Monitor.'},
+   {t:'Verificar que el RFU muestre el reloj de arena',d:'Si muestra X roja: resolver antes de continuar.'},
+   {t:'Conectar parámetros necesarios (SpO2, NBP, CO2)',d:'Cables codificados por color en el lado izquierdo.'},
+   {t:'Usar Smart Select Knob para navegar el menú',d:'Presionar para abrir menú. Girar para navegar. Presionar para confirmar.'},
+  ]},
+  {type:'steps',title:'Modo AED — Desfibrilación guiada por voz',sub:'Para personal con entrenamiento básico en RCP',color:'#e65100',items:[
+   {t:'Confirmar: paciente inconsciente, sin respiración y sin pulso',d:''},
+   {t:'Conectar los pads multifunction al paciente',d:'STERNAL (arriba-derecha) y APEX (abajo-izquierda)'},
+   {t:'Girar el Therapy Knob a AED',d:'El equipo inicia el análisis. La voz guía da instrucciones.'},
+   {t:'¡ALEJEN! No tocar al paciente durante el análisis',d:'Cualquier movimiento interfiere con el análisis del ritmo.'},
+   {t:'Si aconseja descarga: presionar SHOCK (parpadea)',d:'¡Asegurarse que NADIE toque al paciente! Anunciar "¡TODOS AFUERA!"'},
+   {t:'Reiniciar RCP inmediatamente después',d:'El equipo indicará cuándo reanudar la RCP.'},
+  ],tip:{tp:'td',tx:'La principal causa de fallo: alguien toca al paciente durante la descarga. ¡Todos afuera!'}},
+  {type:'steps',title:'Desfibrilación manual — Protocolo 1-2-3',sub:'Para médicos y personal entrenado en SVA',color:'#c62828',items:[
+   {t:'PASO 1 — Seleccionar energía: girar el Therapy Knob al valor deseado',d:'Adulto: 150-200J para FV/TV sin pulso.'},
+   {t:'PASO 2 — Cargar: presionar el botón CHARGE (naranja)',d:'Se escucha tono de carga. Cuando termina, el botón SHOCK parpadea en rojo.'},
+   {t:'Anunciar: "¡CARGANDO! ¡TODOS AFUERA!" — verificar visualmente',d:'Nadie en contacto con el paciente, camilla ni equipamiento.'},
+   {t:'PASO 3 — Descargar: presionar SHOCK (parpadea en rojo)',d:'Con paletas: presionar simultáneamente ambos botones naranjas.'},
+   {t:'Reanudar RCP inmediatamente si corresponde',d:'Evaluar ritmo en el monitor. Seguir protocolo ACLS.'},
+  ],tip:{tp:'td',tx:'1-SELECCIONAR • 2-CARGAR • 3-SHOCK. En una emergencia no hay tiempo para dudar.'}},
+ ]},
+ {id:4,icon:'🔋',title:'Mantenimiento',desc:'Batería, papel, limpieza y almacenamiento',color:'#455a64',slides:[
+  {type:'steps',title:'Cuidado de la batería',sub:'',color:'#455a64',items:[
+   {t:'El equipo SIEMPRE debe tener la batería instalada',d:'Incluso conectado a CA. La batería garantiza funcionamiento ante corte de luz.'},
+   {t:'Mantener el equipo conectado a CA cuando no está en uso',d:'Mantiene la batería al 100% y permite los auto-tests internos.'},
+   {t:'Verificar el nivel de batería al inicio de cada turno',d:'Encender → ícono en pantalla. O presionar el botón lateral de la batería.'},
+  ],tip:{tp:'tw',tx:'Batería <40% solo garantiza ~6 descargas de alta energía. No es suficiente para una emergencia real.'}},
+  {type:'steps',title:'Papel y limpieza',sub:'',color:'#1b5e20',items:[
+   {t:'Cambio de papel: abrir tapa tirando el pestillo hacia arriba',d:'Papel térmico de 50mm. El extremo del papel va hacia ABAJO.'},
+   {t:'Probar la impresora antes de devolver el equipo al servicio',d:''},
+   {t:'Apagar y desconectar ANTES de limpiar',d:''},
+   {t:'Limpiar con paño suave: etanol 70%, isopropanol 70%',d:'Limpiar carcasa, paletas y cable.'},
+  ],tip:{tp:'td',tx:'El DFM100 realiza auto-tests internos periódicamente. Para ello necesita estar conectado a CA con batería instalada.'}},
+ ]},
+];
+const QUIZ_DFM100=[
+ {q:'¿Qué indica el reloj de arena parpadeante en el indicador RFU del DFM100?',ops:['Batería cargando','El equipo está listo para usar','Hay una falla crítica','Modo en espera'],ans:1},
+ {q:'¿Cómo se enciende el Philips DFM100?',ops:['Presionar el botón de encendido','Girar el Therapy Knob a la posición deseada','Presionar el Smart Select Knob','Conectar el cable de CA'],ans:1},
+ {q:'¿Cuáles son los 3 pasos del protocolo de desfibrilación manual?',ops:['Verificar-Cargar-Shock','Seleccionar energía-Cargar-Shock (1-2-3)','Conectar-Analizar-Shock','Cargar-Verificar-Shock'],ans:1},
+ {q:'¿Cuándo debe realizarse la verificación de turno (Shift Check)?',ops:['Mensualmente','Al inicio de cada turno','Semanalmente','Solo al encender por primera vez'],ans:1},
+ {q:'En modo AED, ¿qué guía al operador durante el procedimiento?',ops:['Solo texto en pantalla','Instrucciones de voz y texto','Solo señales luminosas','El médico de guardia'],ans:1},
+ {q:'¿De qué color es el puerto para conectar el cable ECG de monitoreo?',ops:['Verde','Azul','Blanco','Rojo'],ans:2},
+ {q:'¿Qué indica la X roja SÓLIDA con pitido periódico en el RFU?',ops:['Batería cargando','Batería baja — cargar pronto','Falla crítica — no puede entregar terapia','Modo de espera activo'],ans:2},
+ {q:'¿Qué anunciar ANTES de entregar la descarga?',ops:['Presionar SHOCK directamente','Anunciar "¡Cargando! ¡Todos afuera!" y verificar visualmente','Avisar al médico primero','Presionar SYNC y luego SHOCK'],ans:1},
+ {q:'¿Cuál es la energía inicial recomendada para desfibrilación en adulto?',ops:['50J','100J','150-200J','360J'],ans:2},
+ {q:'¿Por qué el DFM100 debe tener la batería instalada incluso cuando está en CA?',ops:['Para cargar más rápido','Para funcionar ante un corte de luz','Para que funcionen los auto-tests','Las dos últimas son correctas'],ans:3},
+];
+
+// ══════════════════════════════════════════
+// ZONES / KEYS / LEADS
+// ══════════════════════════════════════════
+const SE3_ZONES=[
+ {id:'lcd',label:'Pantalla LCD',col:'#1565c0',x:12,y:28,w:210,h:124,desc:'Muestra ondas ECG (3 canales), FC, modo activo, batería y mensajes como "Lead Off" o "Paper?".'},
+ {id:'paper',label:'Registrador térmico',col:'#6a1b9a',x:230,y:26,w:132,h:78,desc:'Papel térmico 80mm. Cambiar: tirar pestañas hacia arriba, insertar con el lado térmico hacia abajo, cerrar al "clic".'},
+ {id:'keys',label:'Panel de teclas',col:'#1b5e20',x:12,y:156,w:210,h:96,desc:'12 teclas. Principales: PRINT/STOP (imprimir/detener), MODE/RST (modo), SENS (ganancia), RECALL (archivos), MENU (configuración).'},
+ {id:'sock',label:'Conectores lado derecho',col:'#b71c1c',x:230,y:108,w:132,h:78,desc:'Cable de paciente (2 tornillos), USB para pendrive, RS232 para PC.'},
+ {id:'leds',label:'Indicadores LED',col:'#e65100',x:230,y:190,w:132,h:30,desc:'Verde = red eléctrica. Amarilla = batería interna. Naranja = batería en carga.'},
+];
+const SE3_KEYS=[
+ {l:'ON/OFF',c:'#c62828',d:'Enciende y apaga. Con red: primero switch lateral, luego este botón. Con batería: presionar directamente.'},
+ {l:'SENS',c:'#1565c0',d:'Ganancia: ×10→×20→AGC→×2.5→×5 mm/mV. Predeterminado por Ingeniería: 10mm/mV.'},
+ {l:'RECALL',c:'#4a148c',d:'Administrador de archivos: ver, imprimir, exportar o eliminar registros ECG guardados.'},
+ {l:'1mV/COPY',c:'#1b5e20',d:'En AUTO/RHYT: reimprime el último ECG. En MANU: marca de calibración 1mV.'},
+ {l:'MODE/RST',c:'#e65100',d:'Cambia modo: AUTO→MANU→RHYT→USBPRT→OFF-AUTO. Ingeniería pre-configuró en AUTO.'},
+ {l:'LEAD ↑↓',c:'#006064',d:'En MANU: cambia grupo de derivaciones. En menú: navega entre pantallas.'},
+ {l:'MENU',c:'#424242',d:'Configuración del sistema. Desde ahí → "Patient Info" para datos del paciente.'},
+ {l:'PRINT/STOP',c:'#b71c1c',d:'Inicia la impresión. Durante impresión: la detiene. Tecla de operación principal.'},
+ {l:'↑↓←→',c:'#546e7a',d:'Navegación en menú, ajustan valores, navegan archivos guardados.'},
+];
+const DFM100_ZONES=[
+ {id:'ports',label:'Puertos de monitoreo',col:'#1565c0',x:5,y:36,w:74,h:177,desc:'Puerto blanco = ECG. Puerto azul = SpO2. Puerto gris = CO2 (capnografía). Puerto rojo = NBP. Codificados por color para evitar errores.'},
+ {id:'knob',label:'Therapy Knob',col:'#e65100',x:85,y:58,w:72,h:122,desc:'Perilla principal. Girándola se ENCIENDE el equipo y se selecciona el modo:\n• OFF: apagado\n• AED: modo semiautomático con guía de voz\n• MON: monitoreo\n• 50J/100J/150J/200J: energía para desfibrilación manual'},
+ {id:'defib',label:'Charge / Shock / Sync',col:'#b71c1c',x:85,y:183,w:72,h:70,desc:'Los 3 botones del protocolo 1-2-3:\n• CHARGE (naranja): carga el desfibrilador\n• SHOCK (rojo, parpadea cuando cargado): entrega la descarga\n• SYNC (azul): activa cardioversión sincronizada'},
+ {id:'display',label:'Pantalla',col:'#1b5e20',x:165,y:36,w:175,h:148,desc:'Muestra: ondas ECG (hasta 3 canales), FC, SpO2, CO2, NBP, alarmas activas, modo actual, categoría del paciente y mensajes de guía AED.'},
+ {id:'rfu',label:'Indicador RFU',col:'#f57f17',x:338,y:36,w:38,h:46,desc:'Ready For Use:\n• Reloj de arena parpadeante: LISTO ✓\n• X roja parpadeante + pitido: batería baja\n• X roja SÓLIDA + pitido: FALLA CRÍTICA — no puede entregar terapia'},
+];
+const LIMB=[
+ {id:'RA',col:'#c62828',eu:'🔴 Rojo',us:'Blanco',where:'Muñeca o cara interna del antebrazo DERECHO'},
+ {id:'LA',col:'#b8860b',eu:'🟡 Amarillo',us:'Negro',where:'Muñeca o cara interna del antebrazo IZQUIERDO'},
+ {id:'RL',col:'#37474f',eu:'⚫ Negro',us:'Verde',where:'Tobillo interno DERECHO (neutro/tierra)'},
+ {id:'LL',col:'#2e7d32',eu:'🟢 Verde',us:'Rojo',where:'Tobillo interno IZQUIERDO'},
+];
+const CHEST=[
+ {id:'V1',col:'#c62828',where:'4° espacio intercostal, borde esternal DERECHO del paciente'},
+ {id:'V2',col:'#e65100',where:'4° espacio intercostal, borde esternal IZQUIERDO del paciente'},
+ {id:'V3',col:'#c8a200',where:'Entre V2 y V4 (punto equidistante)'},
+ {id:'V4',col:'#2e7d32',where:'5° espacio intercostal, línea medioclavicular IZQUIERDA del paciente'},
+ {id:'V5',col:'#1565c0',where:'Línea axilar anterior izquierda, misma altura que V4'},
+ {id:'V6',col:'#6a1b9a',where:'Línea axilar media izquierda, misma altura que V4 y V5'},
+];
+
+// ══════════════════════════════════════════
+// BACKEND (Google Apps Script)
+// ══════════════════════════════════════════
+async function syncBackend(svcId,eqId,p){
+ if(!BACKEND_URL||!S.user)return;
+ const con=eqContent(svcId,eqId);
+ const eq=SVCS.find(s=>s.id===svcId)?.eq.find(e=>e.id===eqId);
+ const svc=SVCS.find(s=>s.id===svcId);
+ try{
+  await fetch(BACKEND_URL,{
+   method:'POST',mode:'no-cors',
+   headers:{'Content-Type':'application/json'},
+   body:JSON.stringify({
+    name:S.user.name,role:S.user.role,dept:S.user.dept,
+    service:svc?.name,equipment:eq?.name,
+    mods:p.mods.length,totalMods:con?.mods.length||0,
+    done:p.done||false,score:p.score||0,totalQuiz:con?.quiz.length||10,
+    passed:p.done&&p.score>=PASS,date:p.date||'-',
+   })
+  });
+ }catch(e){}
+}
+
+async function fetchBackend(){
+ if(!BACKEND_URL)return null;
+ try{
+  const r=await fetch(BACKEND_URL+'?nocache='+Date.now());
+  const d=await r.json();
+  return d.users||[];
+ }catch(e){return null;}
+}
+
+// ══════════════════════════════════════════
+// STORAGE
+// ══════════════════════════════════════════
+const db={
+ get:k=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):null;}catch{return null;}},
+ set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch{}},
+ keys:p=>{const r=[];try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith(p))r.push(k);}}catch{}return r;},
+};
+
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+let S={screen:'login',user:null,svcId:null,eqId:null,modIdx:0,slideIdx:0,
+zone:null,ak:null,al:null,chk:{},qIdx:0,ans:[],chosen:null,
+apw:'',aerr:'',aus:[],ausLoading:false,form:{name:'',role:'Enfermero/a',dept:''}};
+
+function eqContent(s,e){
+ if(s==='cm'&&e==='se3')return{mods:MODS_SE3,quiz:QUIZ_SE3};
+ if(s==='cm'&&e==='dfm100')return{mods:MODS_DFM100,quiz:QUIZ_DFM100};
+ return null;
+}
+function getCon(){return eqContent(S.svcId,S.eqId);}
+function pk(s,e){return`${s||S.svcId}/${e||S.eqId}`;}
+function prog(s,e,u){return(u||S.user)?.progress?.[pk(s,e)]||{mods:[],done:false,score:null,date:null};}
+function setProg(up){const k=pk();const p={...prog(),...up};S.user={...S.user,progress:{...(S.user.progress||{}),[k]:p}};}
+
+// ══════════════════════════════════════════
+// SVG
+// ══════════════════════════════════════════
+function se3SVG(){
+ const z=S.zone;
+ const ov=SE3_ZONES.map(n=>{const a=z===n.id;return`<rect x="${n.x}" y="${n.y}" width="${n.w}" height="${n.h}" rx="4" fill="${a?n.col+'28':'transparent'}" stroke="${a?n.col:'rgba(255,255,255,.15)'}" stroke-width="${a?2.5:.8}" onclick="tZ('${n.id}')" style="cursor:pointer"/>`;}).join('');
+ return`<svg viewBox="0 0 374 256" style="width:100%;border-radius:8px;display:block">
+<rect x="1" y="1" width="372" height="254" rx="10" fill="#d4d3c8" stroke="#bbb" stroke-width="1"/>
+<rect x="1" y="1" width="372" height="24" rx="10" fill="#1a2c44"/><rect x="1" y="14" width="372" height="11" fill="#1a2c44"/>
+<text x="14" y="17" fill="white" font-size="8" font-weight="700" font-family="monospace">EDAN</text>
+<text x="238" y="17" fill="#90caf9" font-size="7" font-family="monospace">SE-3 ELECTROCARDIOGRAPH</text>
+<rect x="12" y="27" width="210" height="125" rx="3" fill="#071507" stroke="#222" stroke-width="1"/>
+<polyline points="18,73 32,73 37,46 42,100 47,73 62,73 67,50 72,94 77,73 92,73 97,53 102,90 107,73 117,73 122,42 127,108 132,73 147,73 152,56 157,88 162,73 172,73 177,51 182,93 187,73 202,73 207,66 212,73" fill="none" stroke="#00e676" stroke-width="1.5"/>
+<polyline points="18,113 32,113 37,107 42,118 47,113 62,113 67,109 72,116 77,113 92,113 97,110 102,115 107,113 117,113 122,108 127,117 132,113 147,113 152,110 157,115 162,113 172,113 177,110 182,115 187,113 202,113 207,111 212,113" fill="none" stroke="#00e676" stroke-width="1.2"/>
+<text x="16" y="162" fill="#00c853" font-size="7" font-family="monospace">HR: 72 bpm   AUTO   25mm/s   10mm/mV</text>
+<rect x="228" y="25" width="130" height="78" rx="3" fill="#eae9df" stroke="#aaa" stroke-width="1"/>
+<rect x="228" y="25" width="130" height="14" rx="3" fill="#111"/>
+<text x="293" y="35" fill="#777" font-size="6.5" text-anchor="middle">▼ SALIDA DE PAPEL</text>
+<rect x="244" y="42" width="96" height="50" rx="1" fill="white" stroke="#ddd" stroke-width=".5"/>
+<rect x="12" y="155" width="210" height="97" rx="3" fill="#aeada4" stroke="#888" stroke-width="1"/>
+${[{x:20,l:'ON/OFF',c:'#c62828'},{x:65,l:'SENS',c:'#1565c0'},{x:110,l:'RECALL',c:'#4a148c'},{x:155,l:'1mV/COPY',c:'#1b5e20'}].map(b=>`<rect x="${b.x}" y="164" width="41" height="20" rx="3" fill="${b.c}"/><text x="${b.x+20}" y="177" fill="white" font-size="6.5" text-anchor="middle" font-weight="700">${b.l}</text>`).join('')}
+${[{x:20,l:'MODE/RST',c:'#37474f'},{x:65,l:'LEAD ↑',c:'#006064'},{x:110,l:'LEAD ↓',c:'#006064'},{x:155,l:'MENU',c:'#424242'}].map(b=>`<rect x="${b.x}" y="190" width="41" height="20" rx="3" fill="${b.c}"/><text x="${b.x+20}" y="203" fill="white" font-size="6.5" text-anchor="middle">${b.l}</text>`).join('')}
+${[{x:20,l:'←'},{x:50,l:'↑'},{x:80,l:'↓'},{x:110,l:'→'}].map(b=>`<rect x="${b.x}" y="216" width="26" height="20" rx="3" fill="#546e7a"/><text x="${b.x+13}" y="229" fill="white" font-size="11" text-anchor="middle">${b.l}</text>`).join('')}
+<rect x="140" y="216" width="64" height="20" rx="3" fill="#b71c1c"/>
+<text x="172" y="229" fill="white" font-size="6.5" text-anchor="middle" font-weight="700">PRINT / STOP</text>
+<rect x="228" y="107" width="130" height="148" rx="3" fill="#c2c1b8" stroke="#888" stroke-width="1"/>
+<rect x="238" y="117" width="72" height="22" rx="3" fill="#111"/>
+<text x="274" y="131" fill="#888" font-size="6" text-anchor="middle" font-family="monospace">PATIENT CABLE</text>
+<rect x="238" y="147" width="28" height="16" rx="2" fill="#444"/><text x="252" y="158" fill="#ccc" font-size="5.5" text-anchor="middle">USB</text>
+<rect x="272" y="147" width="28" height="16" rx="2" fill="#444"/><text x="286" y="158" fill="#ccc" font-size="5.5" text-anchor="middle">RS232</text>
+<circle cx="240" cy="196" r="5.5" fill="#4caf50"/><circle cx="256" cy="196" r="5.5" fill="#ffd54f"/><circle cx="272" cy="196" r="5.5" fill="#ff8f00"/>
+<text x="240" y="212" fill="#78909c" font-size="6">RED  BAT  CARGA</text>
+${ov}</svg>`;
+}
+
+function dfm100SVG(){
+ const z=S.zone;
+ const ov=DFM100_ZONES.map(n=>{const a=z===n.id;return`<rect x="${n.x}" y="${n.y}" width="${n.w}" height="${n.h}" rx="4" fill="${a?n.col+'28':'transparent'}" stroke="${a?n.col:'rgba(255,255,255,.15)'}" stroke-width="${a?2.5:.8}" onclick="tZ('${n.id}')" style="cursor:pointer"/>`;}).join('');
+ return`<svg viewBox="0 0 380 260" style="width:100%;border-radius:8px;display:block">
+<rect x="1" y="1" width="378" height="258" rx="12" fill="#1a2233" stroke="#2c3e5e" stroke-width="1.5"/>
+<rect x="1" y="1" width="378" height="30" rx="12" fill="#0a1525"/><rect x="1" y="18" width="378" height="13" fill="#0a1525"/>
+<text x="16" y="19" fill="white" font-size="8" font-weight="700" font-family="monospace">PHILIPS</text>
+<text x="100" y="19" fill="#90caf9" font-size="7" font-family="monospace">EFFICIA DFM100 DEFIBRILLATOR / MONITOR</text>
+<rect x="5" y="35" width="74" height="178" rx="6" fill="#0d1520" stroke="#1e3248" stroke-width="1"/>
+<rect x="14" y="46" width="56" height="20" rx="4" fill="white"/>
+<text x="42" y="59" fill="#0a1525" font-size="7" text-anchor="middle" font-weight="800">ECG</text>
+<rect x="14" y="74" width="56" height="20" rx="4" fill="#1565c0"/>
+<text x="42" y="87" fill="white" font-size="7" text-anchor="middle" font-weight="700">SpO₂</text>
+<rect x="14" y="102" width="56" height="20" rx="4" fill="#546e7a"/>
+<text x="42" y="115" fill="white" font-size="7" text-anchor="middle" font-weight="700">CO₂</text>
+<rect x="14" y="130" width="56" height="20" rx="4" fill="#c62828"/>
+<text x="42" y="143" fill="white" font-size="7" text-anchor="middle" font-weight="700">NBP</text>
+<text x="42" y="196" fill="#546e7a" font-size="6" text-anchor="middle">MONITOR SIDE</text>
+<circle cx="122" cy="120" r="52" fill="#0d1215" stroke="#3a3a3a" stroke-width="2.5"/>
+<circle cx="122" cy="120" r="40" fill="#1a1a1a" stroke="#2a2a2a" stroke-width="1.5"/>
+<text x="122" y="64" fill="#ddd" font-size="7" text-anchor="middle">OFF</text>
+<text x="78" y="80" fill="#ffd54f" font-size="6.5" text-anchor="middle">AED</text>
+<text x="166" y="80" fill="#66bb6a" font-size="6.5" text-anchor="middle">MON</text>
+<text x="74" y="118" fill="#ef9a9a" font-size="5.5">50J</text>
+<text x="72" y="130" fill="#ef9a9a" font-size="5.5">100J</text>
+<text x="71" y="142" fill="#ef9a9a" font-size="5.5">150J</text>
+<text x="71" y="154" fill="#ef9a9a" font-size="5.5">200J</text>
+<circle cx="148" cy="90" r="3.5" fill="white"/>
+<circle cx="122" cy="120" r="6" fill="#2a2a2a" stroke="#555" stroke-width="1"/>
+<text x="122" y="180" fill="#546e7a" font-size="6" text-anchor="middle">THERAPY KNOB</text>
+<rect x="86" y="185" width="72" height="22" rx="5" fill="#bf360c"/>
+<text x="122" y="199" fill="white" font-size="7.5" text-anchor="middle" font-weight="700">CHARGE</text>
+<rect x="86" y="212" width="72" height="22" rx="5" fill="#7f0000"/>
+<text x="122" y="226" fill="white" font-size="8" text-anchor="middle" font-weight="800">⚡ SHOCK</text>
+<rect x="86" y="239" width="32" height="14" rx="3" fill="#0d47a1"/>
+<text x="102" y="249" fill="white" font-size="5.5" text-anchor="middle">SYNC</text>
+<circle cx="163" cy="241" r="11" fill="#1c1c1c" stroke="#444" stroke-width="1.5"/>
+<text x="163" y="258" fill="#546e7a" font-size="5.5" text-anchor="middle">SMART SEL</text>
+<rect x="166" y="35" width="178" height="150" rx="5" fill="#071507" stroke="#1a3a1a" stroke-width="1"/>
+<polyline points="172,88 182,88 186,62 190,115 194,88 206,88 210,66 214,108 218,88 228,88 232,65 236,112 240,88 248,88 252,60 256,118 260,88 272,88 276,70 280,106 284,88 296,88 300,68 304,108 308,88 320,88 324,73 328,104 332,88" fill="none" stroke="#00e676" stroke-width="1.5"/>
+<rect x="260" y="39" width="78" height="55" rx="3" fill="#0a1a0a"/>
+<text x="265" y="52" fill="#00c853" font-size="7.5">HR: 78</text>
+<text x="265" y="63" fill="#42a5f5" font-size="7">SpO₂ 98%</text>
+<text x="265" y="74" fill="#ffa726" font-size="7">120/80 mmHg</text>
+<text x="265" y="84" fill="#b0bec5" font-size="6.5">EtCO₂ 35</text>
+<rect x="166" y="155" width="178" height="16" rx="0" fill="#0a1a0a"/>
+<text x="172" y="166" fill="#00c853" font-size="6" font-family="monospace">Adult  MONITOR  Lead II  ✓Alarm ON</text>
+${[{x:166,l:'WAVE'},{x:210,l:'ALARM'},{x:254,l:'REPORT'},{x:298,l:'EVENT'}].map(b=>`<rect x="${b.x}" y="178" width="40" height="16" rx="3" fill="#0d1e33" stroke="#1e3248" stroke-width=".5"/><text x="${b.x+20}" y="189" fill="#60a5fa" font-size="5.5" text-anchor="middle">${b.l}</text>`).join('')}
+${[{x:166,l:'LEAD'},{x:210,l:'PAT CAT'},{x:254,l:'ALARMS'},{x:298,l:'PRINT'}].map(b=>`<rect x="${b.x}" y="200" width="40" height="14" rx="3" fill="#0d1e33" stroke="#1e3248" stroke-width=".5"/><text x="${b.x+20}" y="210" fill="#78909c" font-size="5" text-anchor="middle">${b.l}</text>`).join('')}
+<circle cx="355" cy="54" r="13" fill="#1a1a1a" stroke="#3a3a3a" stroke-width="1.5"/>
+<text x="355" y="59" fill="#22c55e" font-size="13" text-anchor="middle">⧗</text>
+<text x="355" y="74" fill="#546e7a" font-size="5.5" text-anchor="middle">RFU</text>
+<circle cx="342" cy="45" r="4" fill="#4caf50"/><circle cx="342" cy="56" r="4" fill="#4caf50"/>
+${ov}</svg>`;
+}
+
+function limbSVG(){
+ const a=S.al;
+ const pts=[{id:'RA',cx:22,cy:162,col:'#c62828'},{id:'LA',cx:178,cy:162,col:'#b8860b'},{id:'RL',cx:58,cy:306,col:'#546e7a'},{id:'LL',cx:142,cy:306,col:'#2e7d32'}];
+ return`<svg viewBox="0 0 200 325" style="width:100%;max-width:200px;display:block;margin:0 auto">
+<circle cx="100" cy="30" r="22" fill="#c8a882" stroke="#b09070" stroke-width="1.5"/>
+<rect x="90" y="50" width="20" height="14" fill="#c8a882" stroke="#b09070" stroke-width="1"/>
+<path d="M60 64 Q40 74 36 128 L36 198 Q36 208 100 208 Q164 208 164 198 L164 128 Q160 74 140 64Z" fill="#c8a882" stroke="#b09070" stroke-width="1.5"/>
+<path d="M140 69 Q174 79 181 150 Q182 165 174 165 Q169 165 167 150 Q162 83 136 78Z" fill="#c8a882" stroke="#b09070" stroke-width="1"/>
+<path d="M60 69 Q26 79 19 150 Q18 165 26 165 Q31 165 33 150 Q38 83 64 78Z" fill="#c8a882" stroke="#b09070" stroke-width="1"/>
+<path d="M100 208 L133 208 L143 302 Q143 310 136 310 Q130 310 128 302 L118 213Z" fill="#c8a882" stroke="#b09070" stroke-width="1"/>
+<path d="M100 208 L67 208 L57 302 Q57 310 64 310 Q70 310 72 302 L82 213Z" fill="#c8a882" stroke="#b09070" stroke-width="1"/>
+${pts.map(p=>`<circle cx="${p.cx}" cy="${p.cy}" r="${a===p.id?10:7}" fill="${p.col}" stroke="white" stroke-width="2" onclick="tL('${p.id}')" style="cursor:pointer"/><text x="${p.cx}" y="${p.cy+4}" fill="white" font-size="6" text-anchor="middle" font-weight="700">${p.id}</text>`).join('')}
+</svg>`;
+}
+
+function chestSVG(){
+ const a=S.al;
+ const pts=[{id:'V1',cx:104,cy:90,col:'#c62828'},{id:'V2',cx:126,cy:90,col:'#e65100'},{id:'V3',cx:140,cy:105,col:'#c8a200'},{id:'V4',cx:155,cy:112,col:'#2e7d32'},{id:'V5',cx:170,cy:116,col:'#1565c0'},{id:'V6',cx:184,cy:119,col:'#6a1b9a'}];
+ return`<svg viewBox="0 0 260 210" style="width:100%;max-width:280px;display:block;margin:0 auto">
+<path d="M68 40 Q50 78 48 120 Q46 162 66 186 Q90 204 130 206 Q170 204 194 186 Q214 162 212 120 Q210 78 192 40Z" fill="#d4bba0" stroke="#b09878" stroke-width="1.5"/>
+<path d="M78 42 Q98 32 130 36" fill="none" stroke="#b09878" stroke-width="1.8"/>
+<path d="M182 42 Q162 32 130 36" fill="none" stroke="#b09878" stroke-width="1.8"/>
+<line x1="130" y1="38" x2="130" y2="178" stroke="#9a8060" stroke-width="2.5"/>
+<path d="M96 90 Q130 84 164 90" fill="none" stroke="#9a8060" stroke-width="1" stroke-dasharray="4,3"/>
+<text x="55" y="93" fill="#9a8060" font-size="7" text-anchor="middle">4° EIC</text>
+<path d="M92 112 Q130 106 168 112" fill="none" stroke="#9a8060" stroke-width="1" stroke-dasharray="4,3"/>
+<text x="55" y="115" fill="#9a8060" font-size="7" text-anchor="middle">5° EIC</text>
+<line x1="155" y1="36" x2="155" y2="178" stroke="#9a8060" stroke-width="0.8" stroke-dasharray="5,4"/>
+<text x="155" y="188" fill="#9a8060" font-size="6.5" text-anchor="middle">LMC</text>
+<text x="130" y="190" fill="#9a8060" font-size="6.5" text-anchor="middle">Esternón</text>
+${pts.map(p=>`<circle cx="${p.cx}" cy="${p.cy}" r="${a===p.id?11:8}" fill="${p.col}" stroke="white" stroke-width="2" onclick="tL('${p.id}')" style="cursor:pointer"/><text x="${p.cx}" y="${p.cy+4.5}" fill="white" font-size="7.5" text-anchor="middle" font-weight="700">${p.id}</text>`).join('')}
+</svg>`;
+}
+
+// ══════════════════════════════════════════
+// SLIDE RENDERER
+// ══════════════════════════════════════════
+function rSlide(mod,slide,mi,si){
+ const col=slide.color||mod.color||'#3b82f6';
+ const hdr=`<h3 style="font-size:17px;font-weight:500;margin-bottom:${slide.sub?'3px':'10px'}">${slide.title}</h3>${slide.sub?`<p class="muted" style="margin-bottom:10px">${slide.sub}</p>`:''}`;
+ if(slide.type==='device'){
+  const zo=S.zone?SE3_ZONES.find(z=>z.id===S.zone):null;
+  return hdr+`<div style="padding:8px;background:var(--card2);border-radius:8px;margin-bottom:10px">${se3SVG()}</div>
+  ${zo?`<div style="border-radius:10px;padding:12px;background:var(--card2);border:1.5px solid ${zo.col}"><p style="font-weight:500;color:${zo.col};margin-bottom:6px">${zo.label}</p><p class="muted" style="line-height:1.65">${zo.desc}</p></div>`:`<p class="muted" style="text-align:center;padding:8px">👆 Tocá cualquier zona del equipo</p>`}`;
+ }
+ if(slide.type==='device_dfm'){
+  const zo=S.zone?DFM100_ZONES.find(z=>z.id===S.zone):null;
+  return hdr+`<div style="padding:8px;background:var(--card2);border-radius:8px;margin-bottom:10px">${dfm100SVG()}</div>
+  ${zo?`<div style="border-radius:10px;padding:12px;background:var(--card2);border:1.5px solid ${zo.col}"><p style="font-weight:500;color:${zo.col};margin-bottom:6px">${zo.label}</p><p class="muted" style="line-height:1.65;white-space:pre-line">${zo.desc}</p></div>`:`<p class="muted" style="text-align:center;padding:8px">👆 Tocá cualquier zona del equipo</p>`}`;
+ }
+ if(slide.type==='keys'){
+  const k=S.ak;
+  return hdr+`<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px">${SE3_KEYS.map((ky,i)=>`<button onclick="tK(${i})" style="background:${k===i?ky.c:ky.c+'30'};color:${k===i?'white':ky.c};border:1.5px solid ${ky.c};border-radius:6px;padding:6px 10px;cursor:pointer;font-size:12px;font-weight:600">${ky.l}</button>`).join('')}</div>
+  ${k!==null?`<div style="border-radius:10px;padding:12px;background:var(--card2);border:1.5px solid ${SE3_KEYS[k].c}"><p style="font-weight:500;color:${SE3_KEYS[k].c};margin-bottom:6px">${SE3_KEYS[k].l}</p><p class="muted" style="line-height:1.65">${SE3_KEYS[k].d}</p></div>`:`<p class="muted" style="text-align:center;padding:8px">👆 Tocá cualquier tecla</p>`}`;
+ }
+ if(slide.type==='cards')return hdr+slide.items.map(it=>`<div style="display:flex;gap:12px;align-items:flex-start;padding:12px;background:var(--card2);border-radius:10px;margin-bottom:8px"><span style="font-size:22px">${it.ic}</span><div><p style="font-weight:500;margin-bottom:4px;font-size:14px">${it.t}</p><p class="muted" style="line-height:1.6">${it.d}</p></div></div>`).join('');
+ if(slide.type==='steps')return hdr+slide.items.map((it,i)=>`<div class="srow"><div class="sn" style="background:${col}">${i+1}</div><div><p class="st">${it.t}</p>${it.d?`<p class="sd">${it.d}</p>`:''}</div></div>`).join('')+(slide.tip?`<div class="tip ${slide.tip.tp}">${slide.tip.tx}</div>`:'');
+ if(slide.type==='notice'){
+  return hdr+`<div style="background:var(--ok-bg);border:1.5px solid var(--ok-bd);border-radius:12px;padding:14px;margin-bottom:14px">
+  <p style="font-weight:600;color:var(--ok);font-size:15px;margin-bottom:6px">✅ Información importante</p>
+  <p style="font-size:13px;color:var(--ok);line-height:1.6">${slide.msg}</p></div>
+  ${slide.params?`<p class="muted" style="font-weight:500;font-size:12px;margin-bottom:8px;text-transform:uppercase">Datos clave</p>${slide.params.map(p=>`<div class="prow"><span class="muted">${p.l}</span><span style="font-weight:500;font-size:14px">${p.v}</span></div>`).join('')}`:''}
+  <div class="tip tw" style="margin-top:14px">⚠️ ${slide.warn}</div>`;
+ }
+ if(slide.type==='checklist'){
+  const key=`${mi}_${si}`;const done=S.chk[key]||new Set();
+  return hdr+slide.items.map((it,i)=>`<div class="chk ${done.has(i)?'done':''}" onclick="tC('${key}',${i})"><span style="font-size:18px;margin-top:1px">${done.has(i)?'✅':'⬜'}</span><span style="font-size:14px;line-height:1.5;color:${done.has(i)?'var(--ok)':'var(--tx)'}">${it}</span></div>`).join('')+(done.size===slide.items.length?`<div class="tip ts">✓ Lista completa</div>`:'');
+ }
+ if(slide.type==='leads_limb'){
+  const a=S.al;const ld=a?LIMB.find(l=>l.id===a):null;
+  return hdr+limbSVG()+`<div style="display:flex;flex-wrap:wrap;gap:6px;margin:10px 0">${LIMB.map(l=>`<button onclick="tL('${l.id}')" style="background:${a===l.id?l.col:'transparent'};color:${a===l.id?'white':l.col};border:1.5px solid ${l.col};border-radius:6px;padding:6px 12px;cursor:pointer;font-size:13px;font-weight:700">${l.id}</button>`).join('')}</div>
+  ${ld?`<div style="border-radius:10px;padding:12px;background:var(--card2);border:1.5px solid ${ld.col}"><p style="font-weight:600;font-size:15px;margin-bottom:4px">${ld.id} — Europeo: ${ld.eu}</p><p class="muted" style="margin-bottom:4px;font-size:12px">Americano: ${ld.us}</p><p style="font-size:14px">📍 ${ld.where}</p></div>`:`<p class="muted" style="text-align:center;padding:6px">👆 Tocá un electrodo</p>`}`;
+ }
+ if(slide.type==='leads_chest'){
+  const a=S.al;const ld=a?CHEST.find(l=>l.id===a):null;
+  return hdr+chestSVG()+`<div style="display:flex;flex-wrap:wrap;gap:6px;margin:10px 0">${CHEST.map(l=>`<button onclick="tL('${l.id}')" style="background:${a===l.id?l.col:'transparent'};color:${a===l.id?'white':l.col};border:1.5px solid ${l.col};border-radius:6px;padding:6px 12px;cursor:pointer;font-size:13px;font-weight:700">${l.id}</button>`).join('')}</div>
+  ${ld?`<div style="border-radius:10px;padding:12px;background:var(--card2);border:1.5px solid ${ld.col}"><p style="font-weight:600;font-size:15px;margin-bottom:6px">${ld.id}</p><p style="font-size:14px">📍 ${ld.where}</p></div>`:`<p class="muted" style="text-align:center;padding:6px">👆 Tocá un electrodo</p>`}`;
+ }
+ return hdr;
+}
+
+// ══════════════════════════════════════════
+// SCREENS
+// ══════════════════════════════════════════
+function rLogin(){return`<div class="w" style="padding-top:24px">
+<div style="text-align:center;margin-bottom:24px">
+ <div style="font-size:40px;margin-bottom:8px">🏥</div>
+ <h1 style="font-size:22px;font-weight:600;margin-bottom:4px">Capacitación Biomédica</h1>
+ <p class="muted">Equipos médicos — SEM / Hospital</p>
+</div>
+<div class="card">
+ <label>Nombre completo</label><input id="fn" placeholder="Tu nombre y apellido" value="${S.form.name}">
+ <label>Rol</label><select id="fr">${['Médico/a','Médico/a Cardiólogo/a','Médico/a Neurocirujano/a','Enfermero/a','Residente','Kinesióloga/o','Técnico/a'].map(r=>`<option${S.form.role===r?' selected':''}>${r}</option>`).join('')}</select>
+ <label>Área / Servicio</label><input id="fd" placeholder="Ej: Clínica Médica, Neurocirugía..." value="${S.form.dept}">
+ <button class="btn btn-p" style="margin-top:8px" onclick="doLogin()">Comenzar →</button>
+</div>
+<button class="btn btn-g" onclick="go('admin_pw')">🔐 Administrador</button>
+</div>`;}
+
+function rHome(){
+ const u=S.user;
+ const totalOk=SVCS.reduce((n,s)=>n+s.eq.filter(e=>e.ok).length,0);
+ const doneOk=SVCS.reduce((n,s)=>n+s.eq.filter(e=>{const p=prog(s.id,e.id,u);return e.ok&&p.done&&p.score>=PASS;}).length,0);
+ return`<div class="w">
+<div class="card" style="display:flex;justify-content:space-between;align-items:flex-start">
+ <div>
+  <p style="font-weight:500;font-size:15px">${u.name}</p>
+  <p class="muted">${u.role} · ${u.dept}</p>
+  <p class="muted" style="margin-top:6px;font-size:12px">Equipos aprobados: ${doneOk}/${totalOk}</p>
+ </div>
+ <button onclick="logout()" style="background:none;border:none;color:var(--mu);cursor:pointer;font-size:12px">Salir</button>
+</div>
+${SVCS.map(svc=>`
+<div class="sec-hdr"><span style="font-size:22px">${svc.icon}</span><p style="font-weight:600;font-size:15px">${svc.name}</p></div>
+${svc.eq.map(eq=>{
+ const p=prog(svc.id,eq.id,u);
+ const passed=p.done&&p.score>=PASS,failed=p.done&&!passed,started=!p.done&&p.mods.length>0;
+ const bc=!eq.ok?'var(--bd)':passed?'var(--ok-bd)':failed?'var(--err-bd)':started?'#1e40af':'var(--bd)';
+ const badge=!eq.ok?`<span style="font-size:11px;color:var(--mu);background:var(--card2);border:.5px solid var(--bd);padding:2px 8px;border-radius:10px">Próximamente</span>`:
+  passed?`<span style="font-size:11px;color:var(--ok);font-weight:600">✓ Aprobado</span>`:
+  failed?`<span style="font-size:11px;color:var(--err);font-weight:600">✗ Refuerzo</span>`:
+  started?`<span style="font-size:11px;color:var(--acc)">${p.mods.length} mód.</span>`:'';
+ return`<div class="eqli" style="border-color:${bc};cursor:${eq.ok?'pointer':'default'};opacity:${eq.ok?1:.55}" onclick="${eq.ok?`openEq('${svc.id}','${eq.id}')`:''}" >
+  <span style="font-size:22px">${eq.icon}</span>
+  <div style="flex:1"><p style="font-weight:500;font-size:14px;margin-bottom:2px">${eq.name}</p><p class="muted" style="font-size:12px">${eq.type}</p></div>
+  <div style="text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+   ${badge}${eq.ok?`<span style="font-size:16px;color:${passed?'var(--ok)':failed?'var(--err)':'var(--mu)'}">›</span>`:'<span>🔒</span>'}
+  </div>
+ </div>`;
+}).join('')}`).join('')}
+<div style="margin-top:8px"><button class="btn btn-g" onclick="go('admin_pw')">🔐 Panel administrador</button></div>
+</div>`;}
+
+function rModule(){
+ const con=getCon();if(!con)return'';
+ const mod=con.mods[S.modIdx],slide=mod.slides[S.slideIdx],total=mod.slides.length,pct=((S.slideIdx+1)/total)*100;
+ const eq=SVCS.find(s=>s.id===S.svcId)?.eq.find(e=>e.id===S.eqId);
+ return`<div class="w">
+<button class="back" onclick="go('home')">← ${eq?.name||'Volver'}</button>
+<div style="display:flex;gap:10px;align-items:center;margin-bottom:10px">
+ <span style="font-size:24px">${mod.icon}</span>
+ <div><p style="font-weight:500;font-size:15px;margin-bottom:1px">${mod.title}</p>
+ <p class="muted" style="font-size:12px">Paso ${S.slideIdx+1} de ${total}</p></div>
+</div>
+<div class="prog" style="margin-bottom:14px"><div class="pf" style="width:${pct}%;background:${mod.color}"></div></div>
+<div class="card">${rSlide(mod,slide,S.modIdx,S.slideIdx)}</div>
+<div style="display:flex;gap:8px">
+ ${S.slideIdx>0?`<button class="btn" style="background:var(--card);border:.5px solid var(--bd);color:var(--tx);flex:1" onclick="pS()">← Anterior</button>`:''}
+ ${S.slideIdx<total-1?`<button class="btn btn-p" style="flex:2" onclick="nS()">Siguiente →</button>`:`<button class="btn" style="background:${mod.color};color:white;flex:2" onclick="cM()">✓ Completar módulo</button>`}
+</div></div>`;}
+
+function rQuiz(){
+ const con=getCon();if(!con)return'';
+ const q=con.quiz[S.qIdx],pct=S.qIdx/con.quiz.length*100;
+ return`<div class="w">
+<p class="muted" style="margin-bottom:6px">Pregunta ${S.qIdx+1} de ${con.quiz.length}</p>
+<div class="prog" style="margin-bottom:14px"><div class="pf" style="width:${pct}%;background:var(--p)"></div></div>
+<div class="card"><p style="font-size:16px;font-weight:500;line-height:1.55;margin-bottom:16px">${q.q}</p>
+${q.ops.map((op,i)=>{let cls='opt',ltr=String.fromCharCode(65+i);
+ if(S.chosen!==null){if(i===q.ans){cls+=' ok';ltr='✓';}else if(i===S.chosen){cls+=' no';ltr='✗';}}
+ return`<div class="${cls}" onclick="answer(${i})"><span class="ol">${ltr}</span><span>${op}</span></div>`;}).join('')}
+</div></div>`;}
+
+function rResult(){
+ const con=getCon();if(!con)return'';
+ const p=prog();const pass=p.score>=PASS;const pct=Math.round(p.score/con.quiz.length*100);
+ const eq=SVCS.find(s=>s.id===S.svcId)?.eq.find(e=>e.id===S.eqId);
+ const svc=SVCS.find(s=>s.id===S.svcId);
+ const status=pass?'✅ APROBADO':'❌ NO APROBADO — requiere refuerzo';
+ const waMsg=encodeURIComponent(`🏥 *Capacitación Biomédica — SEM*\n📋 *Equipo:* ${eq?.name}\n👤 *${S.user.name}*\n🏷️ ${S.user.role} — ${S.user.dept}\n📊 *Resultado:* ${p.score}/${con.quiz.length} (${pct}%)\n${status}\n📅 ${p.date}`);
+ return`<div class="w" style="text-align:center;padding-top:20px">
+<div style="font-size:52px;margin-bottom:12px">${pass?'🎉':'📚'}</div>
+<div class="card">
+ <p class="muted" style="margin-bottom:4px">${svc?.name} · ${eq?.name}</p>
+ <p style="font-size:18px;font-weight:500;color:${pass?'var(--ok)':'var(--err)'};margin-bottom:8px">${pass?'¡Aprobado!':'No aprobado'}</p>
+ <p style="font-size:40px;font-weight:500;color:${pass?'var(--ok)':'var(--err)'};margin-bottom:4px">${p.score}/${con.quiz.length}</p>
+ <p class="muted" style="margin-bottom:16px">${pct}% — mínimo: 80%</p>
+ <div style="background:var(--bd);border-radius:4px;height:8px;margin-bottom:20px">
+  <div style="background:${pass?'var(--ok)':'var(--err)'};height:8px;border-radius:4px;width:${pct}%"></div>
+ </div>
+ <button class="wa" onclick="window.open('https://wa.me/?text=${waMsg}','_blank')">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  Compartir resultado por WhatsApp
+ </button>
+ ${!pass?`<button class="btn" style="background:var(--warn);color:white" onclick="rQ()">🔄 Intentar nuevamente</button>`:''}
+ <button class="btn btn-p" onclick="go('home')">← Volver al inicio</button>
+</div></div>`;}
+
+function rAdmPw(){return`<div class="w" style="padding-top:32px">
+<button class="back" onclick="go('home')">← Volver</button>
+<div class="card" style="text-align:center">
+ <div style="font-size:32px;margin-bottom:12px">🔐</div>
+ <p style="font-weight:500;font-size:16px;margin-bottom:4px">Panel administrador</p>
+ <p class="muted" style="margin-bottom:16px">${BACKEND_URL?'Conectado a Google Sheets ✓':'Sin backend configurado'}</p>
+ <input id="apw" type="password" placeholder="Contraseña" style="text-align:center;margin-bottom:8px">
+ ${S.aerr?`<p style="color:var(--err);font-size:13px;margin-bottom:8px">${S.aerr}</p>`:''}
+ <button class="btn btn-p" onclick="doAdm()">Ingresar</button>
+</div>
+${!BACKEND_URL?`<div class="card" style="margin-top:4px">
+ <p class="muted" style="font-size:12px;line-height:1.7">⚙️ Para ver todos los usuarios desde cualquier dispositivo, configurar Google Apps Script y pegar la URL en el archivo HTML (ver <strong style="color:var(--tx)">backend_apps_script.gs</strong>). Mientras tanto, se muestran los registros de este dispositivo.</p>
+</div>`:''}
+</div>`;}
+
+function rAdmin(){
+ const us=S.aus;
+ const loading=S.ausLoading;
+ if(loading)return`<div class="w" style="text-align:center;padding-top:60px"><div style="font-size:32px" class="spin">⟳</div><p class="muted" style="margin-top:12px">Cargando datos${BACKEND_URL?' desde Google Sheets':''}...</p></div>`;
+
+ // Build stats across all available equipment
+ const avEqs=[];
+ SVCS.forEach(svc=>svc.eq.filter(e=>e.ok).forEach(eq=>avEqs.push({svc,eq})));
+
+ // Per-equipment rows
+ const eqSections=avEqs.map(({svc,eq})=>{
+  const con=eqContent(svc.id,eq.id);
+  const qLen=con?.quiz.length||10;
+  const mLen=con?.mods.length||5;
+  // Aggregate per user for this equipment
+  const rows=us.map(u=>{
+   const p=prog(svc.id,eq.id,u);
+   return{u,p};
+  }).filter(({p})=>p.mods.length>0||p.done);
+  const all=us.length;
+  const studied=rows.length;
+  const evaluated=rows.filter(({p})=>p.done).length;
+  const approved=rows.filter(({p})=>p.done&&p.score>=PASS).length;
+  const notApproved=evaluated-approved;
+  const notStarted=all-studied;
+  return`<div class="card" style="margin-bottom:12px">
+  <p style="font-weight:600;font-size:14px;margin-bottom:2px">${eq.icon} ${eq.name}</p>
+  <p class="muted" style="font-size:12px;margin-bottom:12px">${svc.name} · ${eq.type}</p>
+  <div class="g4" style="margin-bottom:12px">
+   <div class="sc"><p style="font-size:20px;font-weight:600;color:var(--ok)">${approved}</p><p class="muted" style="font-size:10px">Aprobados</p></div>
+   <div class="sc"><p style="font-size:20px;font-weight:600;color:var(--err)">${notApproved}</p><p class="muted" style="font-size:10px">Refuerzo</p></div>
+   <div class="sc"><p style="font-size:20px;font-weight:600;color:var(--warn)">${notStarted}</p><p class="muted" style="font-size:10px">Sin empezar</p></div>
+   <div class="sc"><p style="font-size:20px;font-weight:600;color:var(--acc)">${all}</p><p class="muted" style="font-size:10px">Total</p></div>
+  </div>
+  ${us.map(u=>{
+   const p=prog(svc.id,eq.id,u);
+   const modsOk=p.mods.length>=mLen;
+   const evOk=p.done;
+   const aprOk=p.done&&p.score>=PASS;
+   return`<div class="user-row" style="border-color:${!p.mods.length?'var(--bd)':aprOk?'var(--ok-bd)':evOk?'var(--err-bd)':'#1e3a8a'}">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+     <div>
+      <p style="font-weight:500;font-size:14px">${u.name}</p>
+      <p class="muted" style="font-size:11px">${u.role} · ${u.dept}</p>
+     </div>
+     ${p.done?`<div style="text-align:right">
+      <p style="font-size:18px;font-weight:600;color:${aprOk?'var(--ok)':'var(--err)'}">${p.score}/${qLen}</p>
+      <p style="font-size:10px;font-weight:600;color:${aprOk?'var(--ok)':'var(--err)'}">${aprOk?'✓ APROBADO':'✗ REFUERZO'}</p>
+     </div>`:`<p class="muted" style="font-size:11px">Sin rendir</p>`}
+    </div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+     <span style="font-size:11px;padding:2px 8px;border-radius:8px;background:${p.mods.length?'var(--ok-bg)':'var(--card2)'};color:${p.mods.length?'var(--ok)':'var(--mu)'}">
+      ${p.mods.length?'📚':'⬜'} Módulos: ${p.mods.length}/${mLen}
+     </span>
+     <span style="font-size:11px;padding:2px 8px;border-radius:8px;background:${p.done?'var(--ok-bg)':'var(--card2)'};color:${p.done?'var(--ok)':'var(--mu)'}">
+      ${p.done?'📝':'⬜'} Evaluación: ${p.done?'✓':'pendiente'}
+     </span>
+     ${p.date?`<span style="font-size:11px;color:var(--mu)">📅 ${p.date}</span>`:''}
+    </div>
+   </div>`;
+  }).join('')}
+  ${!us.length?`<p class="muted" style="text-align:center;padding:12px">Sin registros aún</p>`:''}
+ </div>`;
+ }).join('');
+
+ return`<div class="w">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+ <div>
+  <h2 style="font-size:18px;font-weight:500">Panel de resultados</h2>
+  <p class="muted" style="font-size:12px">${us.length} usuario${us.length!==1?'s':''} · ${BACKEND_URL?'Google Sheets':'este dispositivo'}</p>
+ </div>
+ <button class="back" style="margin:0" onclick="go('home')">Salir</button>
+</div>
+${eqSections}
+${avEqs.length===0?`<div class="card" style="text-align:center;color:var(--mu)">No hay equipos activos aún</div>`:''}
+</div>`;}
+
+// ══════════════════════════════════════════
+// RENDER
+// ══════════════════════════════════════════
+function render(){
+ const app=document.getElementById('app');
+ const sc={login:rLogin,home:rHome,module:rModule,quiz:rQuiz,result:rResult,admin_pw:rAdmPw,admin:rAdmin};
+ app.innerHTML=(sc[S.screen]||rLogin)();
+ const b=(id,ev,fn)=>{const el=document.getElementById(id);if(el)el[ev]=fn;};
+ b('fn','oninput',e=>S.form.name=e.target.value);
+ b('fr','onchange',e=>S.form.role=e.target.value);
+ b('fd','oninput',e=>S.form.dept=e.target.value);
+ b('apw','oninput',e=>S.apw=e.target.value);
+ const apw=document.getElementById('apw');if(apw)apw.onkeydown=e=>e.key==='Enter'&&doAdm();
+}
+
+// ══════════════════════════════════════════
+// HANDLERS
+// ══════════════════════════════════════════
+function go(s){S.screen=s;S.zone=null;S.ak=null;S.al=null;render();}
+
+function doLogin(){
+ const n=S.form.name.trim(),r=S.form.role,d=S.form.dept.trim();
+ if(!n||!d)return;
+ const uid='u:'+(n+'__'+d).toLowerCase().replace(/\W+/g,'_').slice(0,50);
+ let u=db.get(uid)||{name:n,role:r,dept:d,progress:{}};
+ u.name=n;u.role=r;u.dept=d;if(!u.progress)u.progress={};
+ db.set(uid,u);S.user={...u,uid};S.screen='home';render();
+}
+function logout(){S.user=null;S.screen='login';render();}
+
+function openEq(sId,eId){
+ S.svcId=sId;S.eqId=eId;
+ const p=prog(sId,eId);
+ if(p.done){S.screen='result';render();return;}
+ S.modIdx=0;S.slideIdx=0;S.zone=null;S.ak=null;S.al=null;S.screen='module';render();
+}
+
+function pS(){S.slideIdx--;S.zone=null;S.ak=null;S.al=null;render();}
+function nS(){S.slideIdx++;S.zone=null;S.ak=null;S.al=null;render();}
+
+async function cM(){
+ const p=prog();const con=getCon();if(!con)return;
+ const mods=[...new Set([...(p.mods||[]),S.modIdx])];
+ const allDone=mods.length>=con.mods.length;
+ setProg({mods});db.set(S.user.uid,S.user);
+ // Sync to backend on module completion
+ await syncBackend(S.svcId,S.eqId,prog());
+ if(allDone&&!p.done){S.ans=[];S.qIdx=0;S.chosen=null;S.screen='quiz';}
+ else if(allDone){S.screen='result';}
+ else{S.modIdx++;S.slideIdx=0;S.zone=null;S.ak=null;S.al=null;}
+ render();
+}
+
+function answer(i){
+ if(S.chosen!==null)return;S.chosen=i;render();
+ setTimeout(async()=>{
+  const con=getCon();if(!con)return;
+  const a=[...S.ans,i];S.ans=a;S.chosen=null;
+  if(a.length===con.quiz.length){
+   const sc=a.reduce((x,v,idx)=>x+(v===con.quiz[idx].ans?1:0),0);
+   setProg({done:true,score:sc,date:new Date().toLocaleDateString('es-AR')});
+   db.set(S.user.uid,S.user);
+   // Sync final result to backend
+   await syncBackend(S.svcId,S.eqId,prog());
+   S.screen='result';
+  }else{S.qIdx++;}render();
+ },850);
+}
+
+async function rQ(){
+ setProg({done:false,score:null,date:null});db.set(S.user.uid,S.user);
+ S.ans=[];S.qIdx=0;S.chosen=null;S.screen='quiz';render();
+}
+
+function tZ(id){S.zone=S.zone===id?null:id;render();}
+function tK(i){S.ak=S.ak===i?null:i;render();}
+function tL(id){S.al=S.al===id?null:id;render();}
+function tC(key,i){const s=S.chk[key]||new Set();const ns=new Set(s);ns.has(i)?ns.delete(i):ns.add(i);S.chk[key]=ns;render();}
+
+async function doAdm(){
+ if(S.apw!==APWD){S.aerr='Contraseña incorrecta';render();return;}
+ S.aerr='';S.ausLoading=true;S.screen='admin';render();
+ if(BACKEND_URL){
+  // Fetch from Google Sheets
+  const backendUsers=await fetchBackend();
+  if(backendUsers){
+   // Convert Google Sheets data to our user format
+   S.aus=backendUsers.map(row=>{
+    const name=row['Nombre']||'';const role=row['Rol']||'';const dept=row['Área/Servicio']||'';
+    const svcName=row['Servicio']||'';const eqName=row['Equipo']||'';
+    const done=String(row['Estado']||'').includes('APROBADO')||String(row['Estado']||'').includes('REFUERZO');
+    const passed=String(row['Estado']||'').includes('APROBADO');
+    const score=parseInt(row['Puntaje'])||0;
+    const date=row['Fecha evaluación']||'-';
+    // Find svc/eq ids from names
+    let svcId='',eqId='';
+    SVCS.forEach(s=>s.eq.forEach(e=>{if(e.name===eqName){svcId=s.id;eqId=e.id;}}));
+    const progress={};
+    const modsStr=String(row['Módulos completados']||'0/0');
+    const modsCount=parseInt(modsStr)||0;
+    if(svcId&&eqId){
+     progress[`${svcId}/${eqId}`]={mods:Array.from({length:modsCount},(_,i)=>i),done,score,passed,date};
+    }
+    return{name,role,dept,progress};
+   });
+  }else{
+   // Fallback to local
+   const keys=db.keys('u:');
+   S.aus=[];keys.forEach(k=>{const u=db.get(k);if(u)S.aus.push(u);});
+  }
+ }else{
+  // Local only
+  const keys=db.keys('u:');
+  S.aus=[];keys.forEach(k=>{const u=db.get(k);if(u)S.aus.push(u);});
+ }
+ S.ausLoading=false;S.apw='';render();
+}
+
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
+render();
+</script>
+</body>
+</html>
